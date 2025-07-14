@@ -26,13 +26,16 @@ function UpdateProduct() {
     try {
       const token = JSON.parse(localStorage.getItem("token"));
 
-      const res = await fetch(`http://localhost:5000/product/${params.id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/product/${params.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const result = await res.json();
 
@@ -63,20 +66,23 @@ function UpdateProduct() {
     try {
       const token = JSON.parse(localStorage.getItem("token"));
 
-      const res = await fetch(`http://localhost:5000/product/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name,
-          price,
-          category,
-          company,
-          tenantId,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/product/${params.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name,
+            price,
+            category,
+            company,
+            tenantId,
+          }),
+        }
+      );
 
       const result = await res.json();
 
