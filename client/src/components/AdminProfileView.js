@@ -32,7 +32,7 @@ function AdminProfileView() {
   const fetchTenantStats = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/orders/tenant?sort=${sortOrder}`,
+        `${process.env.REACT_APP_API_URL}/orders/tenant?sort=${sortOrder}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -54,7 +54,7 @@ function AdminProfileView() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:5000/admin/users", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
