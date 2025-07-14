@@ -27,7 +27,7 @@ function ManageAdmin() {
   async function fetchAdmins() {
     showLoading(); // ✅ start spinner
     try {
-      const res = await fetch("http://localhost:5000/admin/users", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -43,10 +43,13 @@ function ManageAdmin() {
   async function handlePromote(userId) {
     showLoading();
     try {
-      const res = await fetch(`http://localhost:5000/admin/promote/${userId}`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/admin/promote/${userId}`,
+        {
+          method: "PUT",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         alert("✅ Promoted to manager!");
@@ -65,10 +68,13 @@ function ManageAdmin() {
     if (!window.confirm("Are you sure you want to delete this admin?")) return;
     showLoading();
     try {
-      const res = await fetch(`http://localhost:5000/admin/delete/${userId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/admin/delete/${userId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         alert("🗑️ Admin deleted.");
@@ -87,14 +93,17 @@ function ManageAdmin() {
     e.preventDefault();
     showLoading();
     try {
-      const res = await fetch("http://localhost:5000/admin/add-admin", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newAdmin),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/admin/add-admin`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newAdmin),
+        }
+      );
 
       const data = await res.json();
       if (res.ok) {
