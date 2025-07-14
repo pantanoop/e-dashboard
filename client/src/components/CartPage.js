@@ -22,7 +22,7 @@ function CartPage() {
 
     showLoading();
     try {
-      const res = await fetch("http://localhost:5000/cart", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const result = await res.json();
@@ -46,10 +46,13 @@ function CartPage() {
     const token = JSON.parse(localStorage.getItem("token"));
     showLoading();
     try {
-      const res = await fetch(`http://localhost:5000/cart/${productId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/cart/${productId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const result = await res.json();
 
       if (res.ok) {
@@ -69,14 +72,17 @@ function CartPage() {
     const token = JSON.parse(localStorage.getItem("token"));
     showLoading();
     try {
-      const res = await fetch(`http://localhost:5000/cart/${itemId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ quantity: newQuantity }),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/cart/${itemId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ quantity: newQuantity }),
+        }
+      );
 
       if (res.ok) {
         setCart((prev) =>
@@ -113,7 +119,7 @@ function CartPage() {
       );
 
       const orderRes = await fetch(
-        "http://localhost:5000/payment/create-order",
+        `${process.env.REACT_APP_API_URL}/payment/create-order`,
         {
           method: "POST",
           headers: {
@@ -135,7 +141,7 @@ function CartPage() {
         order_id: order.id,
         handler: async function (response) {
           const verifyRes = await fetch(
-            "http://localhost:5000/payment/verify",
+            `${process.env.REACT_APP_API_URL}/payment/verify`,
             {
               method: "POST",
               headers: {
@@ -154,23 +160,26 @@ function CartPage() {
           if (verifyRes.ok) {
             alert(verifyData.message || "✅ Payment verified!");
 
-            const saveOrderRes = await fetch("http://localhost:5000/orders", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                products: cart.map((item) => ({
-                  productId: item.productId._id,
-                  name: item.name,
-                  quantity: item.quantity,
-                })),
-                amount: order.amount,
-                paymentId: response.razorpay_payment_id,
-                orderId: response.razorpay_order_id,
-              }),
-            });
+            const saveOrderRes = await fetch(
+              `${process.env.REACT_APP_API_URL}/orders`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                  products: cart.map((item) => ({
+                    productId: item.productId._id,
+                    name: item.name,
+                    quantity: item.quantity,
+                  })),
+                  amount: order.amount,
+                  paymentId: response.razorpay_payment_id,
+                  orderId: response.razorpay_order_id,
+                }),
+              }
+            );
 
             const saveOrderData = await saveOrderRes.json();
 
@@ -212,7 +221,7 @@ function CartPage() {
     const token = JSON.parse(localStorage.getItem("token"));
     showLoading();
     try {
-      const res = await fetch("http://localhost:5000/clear", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/clear`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
