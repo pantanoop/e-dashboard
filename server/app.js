@@ -15,7 +15,17 @@ const inviteRoutes = require("./routes/inviteRoutes");
 const app = express();
 connectDB();
 
-app.use(cors());
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://storehub-psi.vercel.app"
+    ],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 app.use(authRoutes);
