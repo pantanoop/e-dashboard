@@ -15,7 +15,7 @@ const inviteRoutes = require("./routes/inviteRoutes");
 const app = express();
 connectDB();
 
-
+// ✅ MUST BE FIRST — before any routes:
 app.use(
   cors({
     origin: [
@@ -27,6 +27,9 @@ app.use(
 );
 
 app.use(express.json());
+
+// ✅ Optional: handle preflight properly (sometimes helps)
+app.options("*", cors());
 
 app.use(authRoutes);
 app.use(productRoutes);
