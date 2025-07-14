@@ -22,14 +22,17 @@ function CreateOrganisation() {
     showLoading(); // ✅ start global spinner
 
     try {
-      const orgRes = await fetch("http://localhost:5000/organisation/create", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orgData),
-      });
+      const orgRes = await fetch(
+        `${process.env.REACT_APP_API_URL}/organisation/create`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orgData),
+        }
+      );
 
       const orgDataResponse = await orgRes.json();
 
@@ -39,7 +42,7 @@ function CreateOrganisation() {
       }
 
       const updateRes = await fetch(
-        "http://localhost:5000/organisation/user/update-role",
+        `${process.env.REACT_APP_API_URL}/organisation/user/update-role`,
         {
           method: "PUT",
           headers: {
