@@ -40,7 +40,7 @@ function ProductList() {
   async function getProducts() {
     showLoading(); // ✅
     try {
-      const res = await fetch("http://localhost:5000/products", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/products`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const result = await res.json();
@@ -64,10 +64,13 @@ function ProductList() {
 
     showLoading(); // ✅
     try {
-      const res = await fetch(`http://localhost:5000/product/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/product/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const result = await res.json();
       if (res.ok) {
@@ -87,9 +90,12 @@ function ProductList() {
   async function handleSearch(searchTerm) {
     showLoading(); // ✅
     try {
-      const res = await fetch(`http://localhost:5000/search/${searchTerm}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/search/${searchTerm}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const result = await res.json();
       if (!res.ok || !Array.isArray(result)) {
         console.warn("Invalid search result or unauthorized");
@@ -108,7 +114,7 @@ function ProductList() {
   async function handleAddToCart(productId) {
     showLoading(); // ✅
     try {
-      const res = await fetch("http://localhost:5000/cart/add", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,7 +127,7 @@ function ProductList() {
         setSuccessMessage("✅ Added to cart!");
         setTimeout(() => setSuccessMessage(""), 2000);
 
-        const cartRes = await fetch("http://localhost:5000/cart", {
+        const cartRes = await fetch(`${process.env.REACT_APP_API_URL}/cart`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const cartData = await cartRes.json();
@@ -148,7 +154,7 @@ function ProductList() {
       }
 
       const orderRes = await fetch(
-        "http://localhost:5000/payment/create-order",
+        `${process.env.REACT_APP_API_URL}/payment/create-order`,
         {
           method: "POST",
           headers: {
@@ -178,7 +184,7 @@ function ProductList() {
         handler: async function (response) {
           try {
             const verifyRes = await fetch(
-              "http://localhost:5000/payment/verify",
+              `${process.env.REACT_APP_API_URL}/payment/verify`,
               {
                 method: "POST",
                 headers: {
@@ -197,27 +203,30 @@ function ProductList() {
             if (verifyRes.ok) {
               alert(verifyData.message || "✅ Payment successful!");
 
-              const saveOrderRes = await fetch("http://localhost:5000/orders", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                  tenantId: product.tenantId,
-                  products: [
-                    {
-                      productId: product._id,
-                      name: product.name,
-                      price: product.price,
-                      quantity: 1,
-                    },
-                  ],
-                  amount: product.price,
-                  paymentId: response.razorpay_payment_id,
-                  orderId: response.razorpay_order_id,
-                }),
-              });
+              const saveOrderRes = await fetch(
+                `${process.env.REACT_APP_API_URL}/orders`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify({
+                    tenantId: product.tenantId,
+                    products: [
+                      {
+                        productId: product._id,
+                        name: product.name,
+                        price: product.price,
+                        quantity: 1,
+                      },
+                    ],
+                    amount: product.price,
+                    paymentId: response.razorpay_payment_id,
+                    orderId: response.razorpay_order_id,
+                  }),
+                }
+              );
 
               const saveOrderData = await saveOrderRes.json();
               if (saveOrderRes.ok) {
