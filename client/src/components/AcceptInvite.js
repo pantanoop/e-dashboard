@@ -13,18 +13,21 @@ function AcceptInvite() {
     showLoading(); // ✅ show global spinner
 
     try {
-      const res = await fetch("http://localhost:5000/invites/accept-invite", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          token: inviteToken,
-          name,
-          password,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/invites/accept-invite`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            token: inviteToken,
+            name,
+            password,
+          }),
+        }
+      );
 
       const data = await res.json();
 
