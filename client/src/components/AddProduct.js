@@ -31,14 +31,17 @@ function AddProduct() {
     showLoading(); // ✅ Start spinner
 
     try {
-      const response = await fetch("http://localhost:5000/addProduct", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name, price, category, company }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/addProduct`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ name, price, category, company }),
+        }
+      );
 
       const result = await response.json();
 
