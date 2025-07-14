@@ -19,7 +19,7 @@ connectDB();
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",
+      
       "https://storehub-psi.vercel.app"
     ],
     credentials: true,
