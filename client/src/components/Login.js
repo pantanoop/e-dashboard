@@ -12,11 +12,14 @@ export default function Login() {
 
   async function handleLogin() {
     try {
-      const response = await fetch("http://localhost:5000/google-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/google-login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const result = await response.json();
 
@@ -40,7 +43,7 @@ export default function Login() {
       const decoded = jwtDecode(credentialResponse.credential);
       const { email, name } = decoded;
 
-      const res = await fetch("http://localhost:5000/google-login", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/google-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, name }),
