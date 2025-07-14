@@ -13,7 +13,7 @@ function UserProfileView() {
 
   async function fetchOrders() {
     try {
-      const res = await fetch("http://localhost:5000/orders/user", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/orders/user`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
