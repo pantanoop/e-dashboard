@@ -1,114 +1,121 @@
-const Cart = require("../models/Cart");
+const User = require("../models/User");
 
-exports.addToCart = async (req, res) => {
-  const userId = req.user._id;
-  const tenantId = req.user.tenantId;
-  const { productId, quantity = 1 } = req.body;
-
+exports.getTenantUsers = async (req, res) => {
   try {
-    let cart = await Cart.findOne({ userId });
+    const { role, tenantId } = req.user;
 
-    if (cart) {
-      const itemIndex = cart.products.findIndex(
-        (p) => p.productId.toString() === productId
-      );
-      if (itemIndex > -1) {
-        cart.products[itemIndex].quantity += quantity;
-      } else {
-        cart.products.push({ productId, quantity });
-      }
-      cart.updatedAt = new Date();
-    } else {
-      cart = new Cart({
-        userId,
+    // Only allow admin and manager to view users
+    if (role !== "admin" && role !== "manager") {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    let users;
+
+    if (role === "admin") {
+      // Admin can see all users in their tenant
+      users = await User.find({ tenantId }).select("-password");
+    } else if (role === "manager") {
+      // Manager can only see admins under their tenant
+      users = await User.find({
         tenantId,
-        products: [{ productId, quantity }],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+        role: { $in: ["admin", "manager"] },
+      }).select("-password");
     }
 
-    await cart.save();
-    res.status(200).json(cart);
+    res.json(users);
   } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to add to cart", details: err.message });
+    console.error("Failed to fetch users:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-exports.getCart = async (req, res) => {
-  // console.log("req.user:", req.user);
-  // console.log("req.user._id:", req.user._id, typeof req.user._id);
-
+exports.addAdmin = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ userId: req.user._id })
-      .populate("products.productId")
-      .exec();
-    res.json(cart || { products: [] });
-  } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to fetch cart", details: err.message });
-  }
-};
+    const { role, tenantId } = req.user;
+    const { name, email, password } = req.body;
 
-exports.deleteFromCart = async (req, res) => {
-  const { productId } = req.params;
-
-  try {
-    const cart = await Cart.findOne({ userId: req.user._id });
-    if (!cart) return res.status(404).json({ error: "Cart not found" });
-
-    cart.products = cart.products.filter(
-      (p) => p.productId.toString() !== productId
-    );
-    cart.updatedAt = new Date();
-    await cart.save();
-
-    res.json({ success: true });
-  } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to delete item", details: err.message });
-  }
-};
-
-exports.updateCartItemQuantity = async (req, res) => {
-  const { itemId } = req.params;
-  const { quantity } = req.body;
-
-  try {
-    const cart = await Cart.findOne({ userId: req.user._id });
-    if (!cart) return res.status(404).json({ error: "Cart not found" });
-
-    const item = cart.products.find((p) => p._id.toString() === itemId);
-    if (!item) return res.status(404).json({ error: "Item not found in cart" });
-
-    if (quantity < 1) {
-      return res.status(400).json({ error: "Quantity must be at least 1" });
+    if (role !== "manager") {
+      return res.status(403).json({ message: "Only managers can add admins" });
     }
 
-    item.quantity = quantity;
-    cart.updatedAt = new Date();
-    await cart.save();
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return res
+        .status(400)
+        .json({ message: "User with this email already exists" });
+    }
 
-    res.json({ success: true, item });
+    const newAdmin = new User({
+      name,
+      email,
+      password,
+      role: "admin",
+      tenantId,
+    });
+
+    await newAdmin.save();
+
+    res.status(201).json({ message: "Admin created", user: newAdmin });
   } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to update quantity", details: err.message });
+    console.error("Failed to add admin:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-exports.clearCart = async (req, res) => {
+exports.deleteAdmin = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const { role, tenantId } = req.user;
+    const { userId } = req.params;
 
-    await Cart.deleteMany({ userId });
-    res.status(200).json({ message: "Cart cleared successfully" });
+    // Only managers can delete admins
+    if (role !== "manager") {
+      return res
+        .status(403)
+        .json({ message: "Only managers can delete admins" });
+    }
+
+    const user = await User.findOne({ _id: userId, tenantId });
+
+    if (!user || user.role !== "admin") {
+      return res
+        .status(404)
+        .json({ message: "Admin not found in your tenant" });
+    }
+
+    await User.deleteOne({ _id: userId });
+
+    res.json({ message: "Admin deleted successfully" });
   } catch (err) {
-    console.error("Error clearing cart:", err);
-    res.status(500).json({ message: "Failed to clear cart" });
+    console.error("Delete failed:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.promoteToManager = async (req, res) => {
+  try {
+    const { role, tenantId } = req.user;
+    const { userId } = req.params;
+
+    // Only managers can promote admins
+    if (role !== "manager") {
+      return res.status(403).json({ message: "Only managers can promote" });
+    }
+
+    // Find the target user
+    const user = await User.findOne({ _id: userId, tenantId });
+
+    if (!user || user.role !== "admin") {
+      return res
+        .status(404)
+        .json({ message: "Admin not found in your tenant" });
+    }
+
+    user.role = "manager";
+    await user.save();
+
+    res.json({ message: "User promoted to manager", user });
+  } catch (err) {
+    console.error("Failed to promote:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
