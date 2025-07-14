@@ -15,27 +15,20 @@ const inviteRoutes = require("./routes/inviteRoutes");
 const app = express();
 connectDB();
 
-// ✅ MUST BE FIRST — before any routes:
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://storehub-psi.vercel.app"
-    ],
+    origin: ["http://localhost:3000", "https://storehub-psi.vercel.app"],
     credentials: true,
   })
 );
 
 app.use(express.json());
 
-// ✅ Optional: handle preflight properly (sometimes helps)
-app.options("*", cors());
-
-app.use(authRoutes);
-app.use(productRoutes);
-app.use(cartRoutes);
+app.use("/auth", authRoutes);
+app.use("/products", productRoutes);
+app.use("/cart", cartRoutes);
+app.use("/orders", orderRoutes);
 app.use("/payment", paymentRoutes);
-app.use(orderRoutes);
 app.use("/admin", adminRoutes);
 app.use("/organisation", orgRoutes);
 app.use("/invites", inviteRoutes);
