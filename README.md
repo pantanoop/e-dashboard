@@ -2,6 +2,14 @@
 
 StoreHub is a multi-tenant SaaS dashboard for managing products, orders, users, and payments. It is designed for organisations to efficiently handle their e-commerce operations with role-based access and secure, tenant-aware data management.
 
+
+---
+
+## Website
+
+Live at: [https://storehub-psi.vercel.app/](https://storehub-psi.vercel.app/)
+
+
 ---
 
 ## Features
@@ -35,9 +43,9 @@ storehub
     ├── models              # Database models
     ├── routes              # API routes
     ├── utils               # Utility functions
-    ├── .env                 # Environment variables
+    ├── .env                # Environment variables
     ├── server.js           # Entry point
-    └── readMe.md          # API documentation
+    └── readMe.md           # API documentation
 ```
 
 ---
@@ -139,6 +147,14 @@ RAZORPAY_KEY_SECRET=your_razorpay_secret
 This project is licensed under the MIT License.
 
 ---
+
+## Author
+
+**Anoop Pant**  
+GitHub: [pantanoop](https://github.com/pantanoop)
+
+---
+
 
 ## Contact
 
