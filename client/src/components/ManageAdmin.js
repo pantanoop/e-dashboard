@@ -1,12 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 import AuthContext from "../contexts/auth";
-import { useLoading } from "../contexts/loadingContext"; // ✅ import global loading hook
+import { useLoading } from "../contexts/loadingContext"; 
 import { Link } from "react-router-dom";
 
 function ManageAdmin() {
   const { user } = useContext(AuthContext);
   const token = JSON.parse(localStorage.getItem("token"));
-  const { showLoading, hideLoading } = useLoading(); // ✅ use context
+  const { showLoading, hideLoading } = useLoading(); 
 
   const [admins, setAdmins] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -25,7 +25,7 @@ function ManageAdmin() {
   }, [user]);
 
   async function fetchAdmins() {
-    showLoading(); // ✅ start spinner
+    showLoading(); r
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/users`, {
         headers: { Authorization: `Bearer ${token}` },
