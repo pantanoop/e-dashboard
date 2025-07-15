@@ -22,7 +22,7 @@ function CartPage() {
 
     showLoading();
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/cart`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/cart/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const result = await res.json();
@@ -161,7 +161,7 @@ function CartPage() {
             alert(verifyData.message || "✅ Payment verified!");
 
             const saveOrderRes = await fetch(
-              `${process.env.REACT_APP_API_URL}/orders`,
+              `${process.env.REACT_APP_API_URL}/orders/orders`,
               {
                 method: "POST",
                 headers: {
@@ -221,7 +221,7 @@ function CartPage() {
     const token = JSON.parse(localStorage.getItem("token"));
     showLoading();
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/clear`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/cart/clear`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
