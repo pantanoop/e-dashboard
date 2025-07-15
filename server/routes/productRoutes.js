@@ -20,7 +20,7 @@ router.put("/product/:id", verifyAdmin, updateProduct);
 router.delete("/product/:id", verifyAdmin, deleteProduct);
 
 // Regular access
-router.get("/products", getProducts);
+router.get("/", getProducts);
 router.get("/product/:id", getProduct);
 router.get("/search/:key", searchProduct);
 
