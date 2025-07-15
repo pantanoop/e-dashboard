@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../contexts/auth";
-import { useLoading } from "../contexts/loadingContext"; // ✅ import global loading
+import { useLoading } from "../contexts/loadingContext"; 
 
 function UpdateProduct() {
   const [name, setName] = useState("");
@@ -13,7 +13,7 @@ function UpdateProduct() {
   const navigate = useNavigate();
   const params = useParams();
   const { user } = useContext(AuthContext);
-  const { showLoading, hideLoading } = useLoading(); // ✅
+  const { showLoading, hideLoading } = useLoading(); 
   const tenantId = user?.tenantId;
 
   useEffect(() => {
@@ -22,12 +22,12 @@ function UpdateProduct() {
   }, []);
 
   async function getProductDetail() {
-    showLoading(); // ✅
+    showLoading(); 
     try {
       const token = JSON.parse(localStorage.getItem("token"));
 
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/product/${params.id}`,
+        `${process.env.REACT_APP_API_URL}/products/product/${params.id}`,
         {
           method: "GET",
           headers: {
@@ -52,7 +52,7 @@ function UpdateProduct() {
       console.error("❌ Error loading product:", err);
       alert("Something went wrong. Try again.");
     } finally {
-      hideLoading(); // ✅
+      hideLoading(); 
     }
   }
 
@@ -62,12 +62,12 @@ function UpdateProduct() {
       return;
     }
 
-    showLoading(); // ✅
+    showLoading(); 
     try {
       const token = JSON.parse(localStorage.getItem("token"));
 
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/product/${params.id}`,
+        `${process.env.REACT_APP_API_URL}/products/product/${params.id}`,
         {
           method: "PUT",
           headers: {
@@ -96,7 +96,7 @@ function UpdateProduct() {
       console.error("❌ Update error:", err);
       alert("Something went wrong.");
     } finally {
-      hideLoading(); // ✅
+      hideLoading(); 
     }
   }
 
