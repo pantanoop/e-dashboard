@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/auth";
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode"; // ✅ Named export
+import { jwtDecode } from "jwt-decode"; 
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -13,7 +13,7 @@ export default function Login() {
   async function handleLogin() {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/google-login`,
+        `${process.env.REACT_APP_API_URL}/auth/google-login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -43,7 +43,7 @@ export default function Login() {
       const decoded = jwtDecode(credentialResponse.credential);
       const { email, name } = decoded;
 
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/google-login`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/google-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, name }),
