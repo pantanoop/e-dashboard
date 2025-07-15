@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/auth";
-import { useLoading } from "../contexts/loadingContext"; // ✅ global loading
+import { useLoading } from "../contexts/loadingContext"; 
 
 function OrgAccessPage() {
   const [organisationName, setOrganisationName] = useState("");
@@ -11,7 +11,7 @@ function OrgAccessPage() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
-  const { showLoading, hideLoading } = useLoading(); // ✅ use global spinner
+  const { showLoading, hideLoading } = useLoading();
 
   async function handleAdminLogin() {
     setError("");
@@ -21,7 +21,7 @@ function OrgAccessPage() {
       return;
     }
 
-    showLoading(); // ✅ spinner ON
+    showLoading();
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
         method: "POST",
@@ -56,7 +56,7 @@ function OrgAccessPage() {
       console.error("Admin login error:", err);
       setError("Server error. Try again.");
     } finally {
-      hideLoading(); // ✅ spinner OFF
+      hideLoading(); 
     }
   }
 
