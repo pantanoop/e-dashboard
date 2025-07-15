@@ -10,7 +10,7 @@ function AcceptInvite() {
 
   async function acceptInvite() {
     const authToken = JSON.parse(localStorage.getItem("token"));
-    showLoading(); // ✅ show global spinner
+    showLoading(); 
 
     try {
       const res = await fetch(
