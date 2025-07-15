@@ -25,7 +25,7 @@ function ManageAdmin() {
   }, [user]);
 
   async function fetchAdmins() {
-    showLoading(); r
+    showLoading(); 
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/users`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -36,7 +36,7 @@ function ManageAdmin() {
     } catch (err) {
       console.error("Error fetching admins:", err);
     } finally {
-      hideLoading(); // ✅ stop spinner
+      hideLoading(); 
     }
   }
 
