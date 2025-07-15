@@ -32,7 +32,7 @@ function AddProduct() {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/addProduct`,
+        `${process.env.REACT_APP_API_URL}/products/addProduct`,
         {
           method: "POST",
           headers: {
