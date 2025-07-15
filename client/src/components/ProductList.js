@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import { loadRazorpayScript } from "../utils/razorpay";
 import AuthContext from "../contexts/auth";
-import { useLoading } from "../contexts/loadingContext"; // ✅ global loading
+import { useLoading } from "../contexts/loadingContext"; 
 
 function ProductList() {
   const { setCart } = useCart();
   const { user } = useContext(AuthContext);
-  const { showLoading, hideLoading } = useLoading(); // ✅ spinner control
+  const { showLoading, hideLoading } = useLoading();
   const [products, setProducts] = useState([]);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -38,9 +38,9 @@ function ProductList() {
   }, []);
 
   async function getProducts() {
-    showLoading(); // ✅
+    showLoading(); 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/products`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/products/products`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const result = await res.json();
@@ -54,7 +54,7 @@ function ProductList() {
       console.error("Error fetching products:", err);
       setProducts([]);
     } finally {
-      hideLoading(); // ✅
+      hideLoading(); 
     }
   }
 
@@ -62,10 +62,10 @@ function ProductList() {
     if (!window.confirm("Are you sure you want to delete this product?"))
       return;
 
-    showLoading(); // ✅
+    showLoading(); 
     try {
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/product/${id}`,
+        `${process.env.REACT_APP_API_URL}/products/product/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -83,15 +83,15 @@ function ProductList() {
       console.error("Delete failed:", err);
       alert("❌ Error deleting product");
     } finally {
-      hideLoading(); // ✅
+      hideLoading(); 
     }
   }
 
   async function handleSearch(searchTerm) {
-    showLoading(); // ✅
+    showLoading(); 
     try {
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/search/${searchTerm}`,
+        `${process.env.REACT_APP_API_URL}/products/search/${searchTerm}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -107,12 +107,12 @@ function ProductList() {
       console.error("Search error:", err);
       setProducts([]);
     } finally {
-      hideLoading(); // ✅
+      hideLoading(); 
     }
   }
 
   async function handleAddToCart(productId) {
-    showLoading(); // ✅
+    showLoading(); 
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/cart/add`, {
         method: "POST",
@@ -138,7 +138,7 @@ function ProductList() {
     } catch (err) {
       console.error("Add to cart error:", err);
     } finally {
-      hideLoading(); // ✅
+      hideLoading(); 
     }
   }
 
@@ -204,7 +204,7 @@ function ProductList() {
               alert(verifyData.message || "✅ Payment successful!");
 
               const saveOrderRes = await fetch(
-                `${process.env.REACT_APP_API_URL}/orders`,
+                `${process.env.REACT_APP_API_URL}/orders/orders`,
                 {
                   method: "POST",
                   headers: {
@@ -242,7 +242,7 @@ function ProductList() {
             console.error("Verification or save error:", err);
             alert("Unexpected error after payment.");
           } finally {
-            hideLoading(); // ✅
+            hideLoading(); 
           }
         },
         prefill: {
@@ -260,7 +260,7 @@ function ProductList() {
     } catch (err) {
       console.error("Buy now error:", err);
       alert("Something went wrong. Please try again.");
-      hideLoading(); // ✅ in catch too
+      hideLoading(); 
     }
   }
 
