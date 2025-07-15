@@ -40,7 +40,7 @@ function ProductList() {
   async function getProducts() {
     showLoading(); 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/products/products`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/products`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const result = await res.json();
