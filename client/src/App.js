@@ -43,7 +43,7 @@ function App() {
 
     async function fetchCart() {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/cart`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/cart/cart`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
